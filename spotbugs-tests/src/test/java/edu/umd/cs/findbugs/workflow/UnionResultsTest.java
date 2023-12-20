@@ -35,12 +35,12 @@ class UnionResultsTest {
         Files.walk(workDir.toPath())
                 .sorted(Comparator.reverseOrder())
                 .forEach(path -> {
-            try {
-                Files.delete(path);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     private List<String> readOutPut(String absolutePath) throws IOException {
