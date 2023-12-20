@@ -32,15 +32,15 @@ class UnionResultsTest {
         Assertions.assertTrue(output.stream().anyMatch(line -> line.contains("(Lorg/test/TestClass2;Ljava/util/List;)V")));
 
         //Cleanup
-        Files.walk(workDir.toPath())
-                .sorted(Comparator.reverseOrder())
-                .forEach(path -> {
-                    try {
-                        Files.delete(path);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+//        Files.walk(workDir.toPath())
+//                .sorted(Comparator.reverseOrder())
+//                .forEach(path -> {
+//                    try {
+//                        Files.delete(path);
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
     }
 
     private List<String> readOutPut(String absolutePath) throws IOException {
