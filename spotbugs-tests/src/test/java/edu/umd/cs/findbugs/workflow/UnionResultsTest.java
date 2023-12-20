@@ -10,6 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 class UnionResultsTest {
@@ -17,8 +18,10 @@ class UnionResultsTest {
     @Test
     void testMain() throws IOException {
         //Prepare
-        String fileName = createBugFile();
-        File outputFile = new File("src/test/resources/output.xml");
+        File workDir = new File("build/tmp/UnionResultsTest.testMain");
+        workDir.mkdirs();
+        String fileName = createBugFile(workDir);
+        File outputFile = new File(workDir, "output.xml");
 
         //Act
         UnionResults.main(new String[] { "-withMessages", "-output", outputFile.getAbsolutePath(), fileName });
@@ -29,8 +32,15 @@ class UnionResultsTest {
         Assertions.assertTrue(output.stream().anyMatch(line -> line.contains("(Lorg/test/TestClass2;Ljava/util/List;)V")));
 
         //Cleanup
-        Files.deleteIfExists(new File(fileName).toPath());
-        Files.deleteIfExists(outputFile.toPath());
+        Files.walk(workDir.toPath())
+                .sorted(Comparator.reverseOrder())
+                .forEach(path -> {
+            try {
+                Files.delete(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private List<String> readOutPut(String absolutePath) throws IOException {
@@ -44,11 +54,11 @@ class UnionResultsTest {
         return retVal;
     }
 
-    private static String createBugFile() throws IOException {
-        Path tempFile = Files.createTempFile("spotbugs-test", ".txt");
+    private static String createBugFile(File workDir) throws IOException {
+        Path tempFile = Files.createTempFile(workDir.toPath(), "spotbugs-test", ".txt");
         String fileName = tempFile.toString();
-        File firstFile = new File("src/test/resources/firstFile.xml");
-        File secondFile = new File("src/test/resources/secondFile.xml");
+        File firstFile = new File(workDir, "src/test/resources/firstFile.xml");
+        File secondFile = new File(workDir, "src/test/resources/secondFile.xml");
         Files.deleteIfExists(firstFile.toPath());
         Files.deleteIfExists(secondFile.toPath());
         firstFile.getParentFile().mkdirs();
