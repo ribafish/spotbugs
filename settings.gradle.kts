@@ -16,7 +16,10 @@ include(":test-harness-jupiter")
 
 gradleEnterprise {
   buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
+//    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+//    termsOfServiceAgree = "yes"
+    server = "https://ge.solutions-team.gradle.com/"
+    publishAlways()
+    capture { isTaskInputFiles = true }
   }
 }
